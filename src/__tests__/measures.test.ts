@@ -1,16 +1,16 @@
 import configureMeasurements from '..';
-import allMeausures, {
+import allMeasures, {
   AllMeasures,
   AllMeasuresSystems,
   AllMeasuresUnits,
-} from '../definitions';
+} from '../definitions/all';
 
 test('measures', () => {
   const convert = configureMeasurements<
     AllMeasures,
     AllMeasuresSystems,
     AllMeasuresUnits
-  >(allMeausures);
+  >(allMeasures);
   const actual = convert().measures(),
     expected = [
       'acceleration',
@@ -27,6 +27,7 @@ test('measures', () => {
       'illuminance',
       'length',
       'mass',
+      'massFlowRate',
       'pace',
       'partsPer',
       'pieces',
@@ -35,6 +36,7 @@ test('measures', () => {
       'reactiveEnergy',
       'reactivePower',
       'speed',
+      'torque',
       'temperature',
       'time',
       'voltage',

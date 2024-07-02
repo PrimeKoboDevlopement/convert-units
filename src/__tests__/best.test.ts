@@ -1,4 +1,5 @@
-import configureMeasurements from '..';
+import { expectTypeOf } from 'expect-type';
+import configureMeasurements, { type Converter } from '..';
 import length, { LengthSystems, LengthUnits } from '../definitions/length';
 import power, { PowerSystems, PowerUnits } from '../definitions/power';
 
@@ -39,7 +40,6 @@ test('Should ignore exclude values that are not in the list of possibilities', (
       // Have to ignore TS errors since providing an invalid string to exclude
       // will cause the compiler to fail
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       .toBest({ exclude: ['not_possible'] }),
     expected = {
       val: 1.2,
@@ -70,7 +70,7 @@ test('excludes measurements', () => {
   });
   const actual = convert(1200000)
       .from('mm')
-      .toBest({ exclude: ['km', 'm'] }),
+      .toBest({ exclude: ['km', 'm', 'dm'] }),
     expected = {
       val: 120000,
       unit: 'cm',
@@ -126,21 +126,11 @@ test('does not break when excluding from measurement', () => {
   expect(actual).toEqual(expected);
 });
 
-test('if all measurements are excluded return from', () => {
-  const convert = configureMeasurements<'length', LengthSystems, LengthUnits>({
-    length,
-  });
-  const actual = convert(10)
-    .from('km')
-    .toBest({ exclude: ['mm', 'cm', 'm', 'km', 'nm', 'μm'] });
-  expect(actual).toEqual(null);
-});
-
 test('pre-cut off number', () => {
   const convert = configureMeasurements<'length', LengthSystems, LengthUnits>({
     length,
   });
-  const actual = convert(9000).from('mm').toBest({ cutOffNumber: 10 }),
+  const actual = convert(9000).from('mm').toBest({ cutOffNumber: 100 }),
     expected = {
       val: 900,
       unit: 'cm',
@@ -178,7 +168,7 @@ test('post-cut off number', () => {
   expect(actual).toEqual(expected);
 });
 
-test('return null if all possible units are excluded', () => {
+test('return the original value/unit if all possible units are excluded', () => {
   const convert = configureMeasurements<'length', LengthSystems, LengthUnits>({
     length,
   });
@@ -186,7 +176,29 @@ test('return null if all possible units are excluded', () => {
   const actual = convertLenght
       .from('km')
       .toBest({ exclude: convertLenght.possibilities() }),
-    expected = null;
+    expected = {
+      val: 10,
+      unit: 'km',
+      singular: 'Kilometer',
+      plural: 'Kilometers',
+    };
+  expect(actual).toEqual(expected);
+});
+
+test('return the original value/unit the convert value is zero', () => {
+  const convert = configureMeasurements<'length', LengthSystems, LengthUnits>({
+    length,
+  });
+  const convertLenght = convert(0);
+  const actual = convertLenght
+      .from('km')
+      .toBest({ exclude: convertLenght.possibilities() }),
+    expected = {
+      val: 0,
+      unit: 'km',
+      singular: 'Kilometer',
+      plural: 'Kilometers',
+    };
   expect(actual).toEqual(expected);
 });
 
@@ -263,4 +275,14 @@ test('best mm with negative numbers', () => {
       plural: 'Meters',
     };
   expect(actual).toEqual(expected);
+});
+
+test("toBest method's return type should equal the desired return type", () => {
+  type toBestMethod = Converter<'length', LengthSystems, LengthUnits>['toBest'];
+  expectTypeOf<toBestMethod>().returns.toEqualTypeOf<{
+    val: number;
+    unit: LengthUnits;
+    singular: string;
+    plural: string;
+  } | null>();
 });

@@ -26,7 +26,8 @@ The code snippet below shows everything needed to get going:
 
 ```js
 // `allMeasures` includes all the measures packaged with this library
-import configureMeasurements, { allMeasures } from 'convert-units';
+import configureMeasurements from 'convert-units';
+import allMeasures from 'convert-units/definitions/all';
 
 const convert = configureMeasurements(allMeasures);
 ```
@@ -34,7 +35,8 @@ const convert = configureMeasurements(allMeasures);
 It's also possible to limit the measures configured. This allows for smaller packages when using a bundler like `webpack` or `rollup`:
 
 ```js
-import configureMeasurements, { volume, mass, length } from 'convert-units';
+import configureMeasurements from 'convert-units';
+import volume from 'convert-units/definitions/volume';
 
 /*
   `configureMeasurements` is a closure that accepts a directory
@@ -74,6 +76,18 @@ To convert a unit to another unit within the same measure with the smallest valu
 ```js
 convert(12000).from('mm').toBest();
 // { val: 12, unit: 'm', ... }
+```
+
+> Note: The `toBest` method is *subjective* and **does not work for all measures**.
+
+If a *better* value is not found, then from unit is returned. This is also the case for zero:
+
+```js
+convert(1).from('mm').toBest();
+// { val: 1, unit: 'mm', ... }
+
+convert(0).from('mm').toBest();
+// { val: 0, unit: 'mm', ... }
 ```
 
 Exclude units to get different results:
@@ -725,11 +739,14 @@ Since measure definitions are plain JS objects, additional units can be added, r
 
 ```ts
 import configureMeasurements, {
-  length,
-  LengthSystems,
-  LengthUnits,
   Measure
 } from 'convert-units';
+
+import
+  length, {
+  LengthSystems,
+  LengthUnits,
+} from "convert-units/definitions/length"
 
 type NewLengthUnits = LengthUnits | 'px';
 const DPI = 96;
@@ -788,7 +805,8 @@ convert(1).from('m').to('ft');
 
 `convert.js`
 ```js
-import configureMeasurements, { allMeasures } from 'convert-units';
+import configureMeasurements from 'convert-units';
+import allMeasures from 'convert-units/definitions/all';  
 
 export default configureMeasurements(allMeasures);
 ```
@@ -799,14 +817,17 @@ Typescript
 The library provides types for all packaged mesasures:
 
 ```ts
-import configureMeasurements, {
-  area,
-  AreaSystems,
-  AreaUnits,
-  length,
+import configureMeasurements from 'convert-units';
+
+import length, {
   LengthSystems,
   LengthUnits,
-} from 'convert-units';
+} from "convert-units/definitions/length"
+
+import area, {
+  AreaSystems,
+  AreaUnits,
+} from "convert-units/definitions/area"
 
 // Measures: The names of the measures being used
 type Measures = 'length' | 'area';
@@ -827,14 +848,17 @@ convert(4).from('m').to('cm');
 This also allows for IDE tools to highlight issues before running the application:
 
 ```ts
-import configureMeasurements, {
-  area,
-  AreaSystems,
-  AreaUnits,
-  length,
+import configureMeasurements from 'convert-units';
+
+import length, {
   LengthSystems,
   LengthUnits,
-} from 'convert-units';
+} from "convert-units/definitions/length"
+
+import area, {
+  AreaSystems,
+  AreaUnits,
+} from "convert-units/definitions/area"
 
 // Measures: The names of the measures being used
 type Measures = 'length' | 'area';
@@ -855,12 +879,13 @@ convert(4).from('wat').to('cm');
 Types for the `allMeasures` object are also provided:
 
 ```js
-import configureMeasurements, {
+import configureMeasurements from 'convert-units';
+
+import allMeasures, {
   AllMeasures,
-  allMeasures,
   AllMeasuresSystems,
   AllMeasuresUnits,
-} from 'convert-units';
+} from 'convert-units/definitions/all';
 
 const convertAll = configureMeasurements<
   AllMeasures,
@@ -918,6 +943,7 @@ Packaged Units
 * oz
 * lb
 * mt
+* st
 * t
 </details>
 
@@ -1032,6 +1058,14 @@ Packaged Units
 </details>
 
 <details>
+<summary>Torque</summary>
+* Nm
+* lbf-ft
+</details>
+
+
+
+<details>
 <summary>Pace</summary>
 * s/m
 * min/km
@@ -1047,22 +1081,24 @@ Packaged Units
 * MPa
 * bar
 * torr
+* mH2O
+* mmHg
 * psi
 * ksi
 </details>
 
 <details>
 <summary>Digital</summary>
-* b
-* Kb
-* Mb
-* Gb
-* Tb
-* B
-* KB
+* bit
+* byte
+* kB
 * MB
 * GB
 * TB
+* KiB
+* MiB
+* GiB
+* TiB
 </details>
 
 <details>
@@ -1126,6 +1162,8 @@ Packaged Units
 
 <details>
 <summary>Energy</summary>
+* Ws
+* Wm
 * Wh
 * mWh
 * kWh
@@ -1169,6 +1207,7 @@ Packaged Units
 * N
 * kN
 * lbf
+* kgf
 </details>
 
 <details>

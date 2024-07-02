@@ -1,8 +1,10 @@
-import { Measure, Unit } from './../index';
-export type EnergyUnits = EnergySIUnits;
-export type EnergySystems = 'SI';
+import { Measure, Unit } from './../index.js';
+export type EnergyUnits = EnergySIUnits | EnergyNutritionUnits;
+export type EnergySystems = 'SI' | 'nutrition';
 
 export type EnergySIUnits =
+  | 'Ws'
+  | 'Wm'
   | 'Wh'
   | 'mWh'
   | 'kWh'
@@ -13,7 +15,23 @@ export type EnergySIUnits =
   | 'MJ'
   | 'GJ';
 
+export type EnergyNutritionUnits = 'kcal' | 'cal';
+
 const SI: Record<EnergySIUnits, Unit> = {
+  Ws: {
+    name: {
+      singular: 'Watt-second',
+      plural: 'Watt-seconds',
+    },
+    to_anchor: 1,
+  },
+  Wm: {
+    name: {
+      singular: 'Watt-minute',
+      plural: 'Watt-minutes',
+    },
+    to_anchor: 60,
+  },
   Wh: {
     name: {
       singular: 'Watt-hour',
@@ -79,9 +97,38 @@ const SI: Record<EnergySIUnits, Unit> = {
   },
 };
 
+const nutrition: Record<EnergyNutritionUnits, Unit> = {
+  cal: {
+    name: {
+      singular: 'calorie',
+      plural: 'calories',
+    },
+    to_anchor: 1,
+  },
+  kcal: {
+    name: {
+      singular: 'Kilocalorie',
+      plural: 'Kilocalories',
+    },
+    to_anchor: 1000,
+  },
+};
 const measure: Measure<EnergySystems, EnergyUnits> = {
   systems: {
     SI,
+    nutrition,
+  },
+  anchors: {
+    SI: {
+      nutrition: {
+        ratio: 1 / 4.184,
+      },
+    },
+    nutrition: {
+      SI: {
+        ratio: 4.184,
+      },
+    },
   },
 };
 

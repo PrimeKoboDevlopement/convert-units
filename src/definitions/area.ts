@@ -1,4 +1,4 @@
-import { Measure, Unit } from './../index';
+import { Measure, Unit } from './../index.js';
 export type AreaUnits = AreaMetricUnits | AreaImperialUnits;
 export type AreaSystems = 'metric' | 'imperial';
 
@@ -7,6 +7,7 @@ export type AreaMetricUnits =
   | 'μm2'
   | 'mm2'
   | 'cm2'
+  | 'dm2'
   | 'm2'
   | 'ha'
   | 'km2';
@@ -40,6 +41,13 @@ const metric: Record<AreaMetricUnits, Unit> = {
       plural: 'Square Centimeters',
     },
     to_anchor: 1 / 10000,
+  },
+  dm2: {
+    name: {
+      singular: 'Square Decimeter',
+      plural: 'Square Decimeters',
+    },
+    to_anchor: 1 / 100,
   },
   m2: {
     name: {

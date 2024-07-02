@@ -182,3 +182,45 @@ test('m to nm', () => {
   });
   expect(convert(1).from('m').to('nm')).toBeCloseTo(1e9);
 });
+
+test('in to mils', () => {
+  const convert = configureMeasurements<'length', LengthSystems, LengthUnits>({
+    length,
+  });
+  expect(convert(1).from('in').to('mil')).toBe(1e3);
+});
+
+test('mils to in', () => {
+  const convert = configureMeasurements<'length', LengthSystems, LengthUnits>({
+    length,
+  });
+  expect(convert(1).from('mil').to('in')).toBe(1e-3);
+});
+
+test('mils to m', () => {
+  const convert = configureMeasurements<'length', LengthSystems, LengthUnits>({
+    length,
+  });
+  expect(convert(1).from('mil').to('m')).toBeCloseTo(2.54e-5);
+});
+
+test('cm to mils', () => {
+  const convert = configureMeasurements<'length', LengthSystems, LengthUnits>({
+    length,
+  });
+  expect(convert(1).from('cm').to('mil')).toBeCloseTo(393.701);
+});
+
+test('dm to m', () => {
+  const convert = configureMeasurements<'length', LengthSystems, LengthUnits>({
+    length,
+  });
+  expect(convert(1).from('dm').to('m')).toBe(1e-1);
+});
+
+test('m to dm', () => {
+  const convert = configureMeasurements<'length', LengthSystems, LengthUnits>({
+    length,
+  });
+  expect(convert(1).from('m').to('dm')).toBe(1e1);
+});

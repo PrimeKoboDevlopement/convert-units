@@ -1,4 +1,4 @@
-import { Measure, Unit } from './../index';
+import { Measure, Unit } from './../index.js';
 export type TemperatureUnits =
   | TemperatureMetricUnits
   | TemperatureImperialUnits;
@@ -18,8 +18,8 @@ const metric: Record<TemperatureMetricUnits, Unit> = {
   },
   K: {
     name: {
-      singular: 'degree Kelvin',
-      plural: 'degrees Kelvin',
+      singular: 'Kelvin',
+      plural: 'Kelvins',
     },
     to_anchor: 1,
     anchor_shift: 273.15,

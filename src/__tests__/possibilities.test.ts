@@ -1,18 +1,19 @@
 import configureMeasurements from '..';
-import allMeausures, {
-  AllMeasures,
-  AllMeasuresSystems,
-  AllMeasuresUnits,
-} from '../definitions';
 import acceleration, {
   AccelerationSystems,
   AccelerationUnits,
 } from '../definitions/acceleration';
+import allMeasures, {
+  AllMeasures,
+  AllMeasuresSystems,
+  AllMeasuresUnits,
+} from '../definitions/all';
 import angle, { AngleSystems, AngleUnits } from '../definitions/angle';
 import apparentPower, {
   ApparentPowerSystems,
   ApparentPowerUnits,
 } from '../definitions/apparentPower';
+import area, { AreaSystems, AreaUnits } from '../definitions/area';
 import charge, { ChargeSystems, ChargeUnits } from '../definitions/charge';
 import current, { CurrentSystems, CurrentUnits } from '../definitions/current';
 import digital, { DigitalSystems, DigitalUnits } from '../definitions/digital';
@@ -29,6 +30,10 @@ import illuminance, {
 } from '../definitions/illuminance';
 import length, { LengthSystems, LengthUnits } from '../definitions/length';
 import mass, { MassSystems, MassUnits } from '../definitions/mass';
+import massFlowRate, {
+  MassFlowRateSystems,
+  MassFlowRateUnits,
+} from '../definitions/massFlowRate';
 import pace, { PaceSystems, PaceUnits } from '../definitions/pace';
 import partsPer, {
   PartsPerSystems,
@@ -54,6 +59,7 @@ import temperature, {
   TemperatureUnits,
 } from '../definitions/temperature';
 import time, { TimeSystems, TimeUnits } from '../definitions/time';
+import torque, { TorqueSystems, TorqueUnits } from '../definitions/torque';
 import voltage, { VoltageSystems, VoltageUnits } from '../definitions/voltage';
 import volume, { VolumeSystems, VolumeUnits } from '../definitions/volume';
 import volumeFlowRate, {
@@ -103,7 +109,7 @@ test('kg possibilities', () => {
     mass,
   });
   const actual = convert().from('kg').possibilities(),
-    expected = ['mcg', 'mg', 'g', 'kg', 'mt', 'oz', 'lb', 't'];
+    expected = ['mcg', 'mg', 'g', 'kg', 'mt', 'oz', 'lb', 'st', 't'];
   expect(actual.sort()).toEqual(expected.sort());
 });
 
@@ -117,8 +123,10 @@ test('m possibilities', () => {
       'μm',
       'mm',
       'cm',
+      'dm',
       'm',
       'km',
+      'mil',
       'in',
       'yd',
       'ft-us',
@@ -144,7 +152,20 @@ test('mass possibilities', () => {
     mass,
   });
   const actual = convert().possibilities('mass'),
-    expected = ['mcg', 'mg', 'g', 'kg', 'mt', 'oz', 'lb', 't'];
+    expected = ['mcg', 'mg', 'g', 'kg', 'mt', 'oz', 'lb', 'st', 't'];
+  expect(actual.sort()).toEqual(expected.sort());
+});
+
+test('mass flow rate possibilities', () => {
+  const convert = configureMeasurements<
+    'massFlowRate',
+    MassFlowRateSystems,
+    MassFlowRateUnits
+  >({
+    massFlowRate,
+  });
+  const actual = convert().possibilities('massFlowRate'),
+    expected = ['kg/h', 'kg/s', 'lb/h', 'lb/s', 'mt/h'];
   expect(actual.sort()).toEqual(expected.sort());
 });
 
@@ -246,8 +267,10 @@ test('length possibilities', () => {
       'μm',
       'mm',
       'cm',
+      'dm',
       'm',
       'km',
+      'mil',
       'in',
       'yd',
       'ft-us',
@@ -255,6 +278,29 @@ test('length possibilities', () => {
       'fathom',
       'mi',
       'nMi',
+    ];
+  expect(actual.sort()).toEqual(expected.sort());
+});
+
+test('area possibilities', () => {
+  const convert = configureMeasurements<'area', AreaSystems, AreaUnits>({
+    area,
+  });
+  const actual = convert().possibilities('area'),
+    expected = [
+      'nm2',
+      'μm2',
+      'mm2',
+      'cm2',
+      'dm2',
+      'm2',
+      'ha',
+      'km2',
+      'in2',
+      'yd2',
+      'ft2',
+      'ac',
+      'mi2',
     ];
   expect(actual.sort()).toEqual(expected.sort());
 });
@@ -301,7 +347,18 @@ test('digital possibilities', () => {
     digital,
   });
   const actual = convert().possibilities('digital'),
-    expected = ['b', 'Kb', 'Mb', 'Gb', 'Tb', 'B', 'KB', 'MB', 'GB', 'TB'];
+    expected = [
+      'bit',
+      'byte',
+      'kB',
+      'MB',
+      'GB',
+      'TB',
+      'KiB',
+      'MiB',
+      'GiB',
+      'TiB',
+    ];
   expect(actual.sort()).toEqual(expected.sort());
 });
 
@@ -327,7 +384,19 @@ test('pressure possibilities', () => {
     pressure,
   });
   const actual = convert().possibilities('pressure'),
-    expected = ['Pa', 'kPa', 'MPa', 'hPa', 'bar', 'torr', 'psi', 'ksi', 'inHg'];
+    expected = [
+      'Pa',
+      'kPa',
+      'MPa',
+      'hPa',
+      'bar',
+      'torr',
+      'mH2O',
+      'mmHg',
+      'psi',
+      'ksi',
+      'inHg',
+    ];
   expect(actual.sort()).toEqual(expected.sort());
 });
 
@@ -337,6 +406,15 @@ test('speed possibilities', () => {
   });
   const actual = convert().possibilities('speed'),
     expected = ['m/s', 'km/h', 'mph', 'knot', 'ft/s', 'ft/min', 'in/h', 'mm/h'];
+  expect(actual.sort()).toEqual(expected.sort());
+});
+
+test('torque possibilities', () => {
+  const convert = configureMeasurements<'torque', TorqueSystems, TorqueUnits>({
+    torque,
+  });
+  const actual = convert().possibilities('torque'),
+    expected = ['Nm', 'lbf-ft'];
   expect(actual.sort()).toEqual(expected.sort());
 });
 
@@ -415,7 +493,21 @@ test('energy possibilities', () => {
     energy,
   });
   const actual = convert().possibilities('energy'),
-    expected = ['Wh', 'mWh', 'kWh', 'MWh', 'GWh', 'J', 'kJ', 'MJ', 'GJ'];
+    expected = [
+      'Ws',
+      'Wm',
+      'Wh',
+      'mWh',
+      'kWh',
+      'MWh',
+      'GWh',
+      'J',
+      'kJ',
+      'MJ',
+      'GJ',
+      'cal',
+      'kcal',
+    ];
   expect(actual.sort()).toEqual(expected.sort());
 });
 
@@ -491,7 +583,7 @@ test('force possibilities', () => {
     force,
   });
   const actual = convert().possibilities('force'),
-    expected = ['N', 'kN', 'lbf'];
+    expected = ['N', 'kN', 'lbf', 'kgf'];
   expect(actual.sort()).toEqual(expected.sort());
 });
 
@@ -513,34 +605,35 @@ test('all possibilities', () => {
     AllMeasures,
     AllMeasuresSystems,
     AllMeasuresUnits
-  >(allMeausures);
+  >(allMeasures);
   const actual = convert().possibilities(),
     // Please keep these sorted for maintainability
     expected = [
       'A',
       'arcmin',
       'arcsec',
-      'B',
       'Btu/s',
+      'bit',
+      'byte',
       'C',
       'F',
       'R',
       'GB',
-      'Gb',
+      'GiB',
       'K',
-      'KB',
-      'Kb',
+      'kB',
+      'KiB',
       'MB',
       'MPa',
-      'Mb',
+      'MiB',
       'N',
       'Pa',
       'TB',
-      'Tb',
+      'TiB',
       'ac',
-      'b',
       'bar',
       'c',
+      'cal',
       'cl',
       'cl/s',
       'cm',
@@ -554,6 +647,8 @@ test('all possibilities', () => {
       'deg/s',
       'dl',
       'dl/s',
+      'dm',
+      'dm2',
       'ea',
       'dz',
       'fl-oz',
@@ -603,15 +698,21 @@ test('all possibilities', () => {
       'kA',
       'kPa',
       'kanna',
+      'kcal',
       'kg',
+      'kgf',
       'kkp',
       'kJ',
+      'lb/h',
+      'lb/s',
       'MJ',
       'GJ',
       'kN',
       'kl',
       'Ml',
       'Gl',
+      'kg/h',
+      'kg/s',
       'kl/h',
       'kl/min',
       'kl/s',
@@ -631,6 +732,7 @@ test('all possibilities', () => {
       'kW',
       'kWh',
       'l',
+      'lbf-ft',
       'l/h',
       'l/min',
       'l/s',
@@ -649,8 +751,10 @@ test('all possibilities', () => {
       'mC',
       'mcg',
       'mg',
+      'mH2O',
       'mi',
       'mi2',
+      'mil',
       'min',
       'min/km',
       'min/mi',
@@ -661,14 +765,17 @@ test('all possibilities', () => {
       'mm2',
       'mm3',
       'mm3/s',
+      'mmHg',
       'month',
       'mph',
       'ms',
       'msk',
       'mt',
+      'mt/h',
       'mu',
       'nC',
       'nm',
+      'Nm',
       'nm2',
       'mHz',
       'MHz',
@@ -719,6 +826,8 @@ test('all possibilities', () => {
       'VARh',
       'W',
       'week',
+      'Ws',
+      'Wm',
       'Wh',
       'yd',
       'yd2',
@@ -742,6 +851,7 @@ test('all possibilities', () => {
       'ream',
       'scores',
       'sm-gr',
+      'st',
       'trio',
     ];
   expect(actual.sort()).toEqual(expected.sort());

@@ -1,9 +1,9 @@
 import configureMeasurements from '..';
-import allMeausures, {
+import allMeasures, {
   AllMeasures,
   AllMeasuresSystems,
   AllMeasuresUnits,
-} from '../definitions';
+} from '../definitions/all';
 import length, { LengthSystems, LengthUnits } from '../definitions/length';
 
 test('list length not 0', () => {
@@ -115,7 +115,7 @@ test('list by measure', () => {
     AllMeasures,
     AllMeasuresSystems,
     AllMeasuresUnits
-  >(allMeausures);
+  >(allMeasures);
   const full = convert().list();
   const measures = convert().measures();
 
@@ -130,8 +130,6 @@ test('list by measure', () => {
 test('unsupported measure should throw', () => {
   const convert = configureMeasurements({});
   expect(() => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     convert().list('BadMeasure');
   }).toThrow();
 });

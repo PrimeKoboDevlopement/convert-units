@@ -1,9 +1,10 @@
-import { Measure, Unit } from './../index';
+import { Measure, Unit } from './../index.js';
 export type LengthUnits = LengthMetricUnits | LengthImperialUnits;
 export type LengthSystems = 'metric' | 'imperial';
 
-export type LengthMetricUnits = 'nm' | 'μm' | 'mm' | 'cm' | 'm' | 'km';
+export type LengthMetricUnits = 'nm' | 'μm' | 'mm' | 'cm' | 'dm' | 'm' | 'km';
 export type LengthImperialUnits =
+  | 'mil'
   | 'in'
   | 'yd'
   | 'ft-us'
@@ -41,6 +42,13 @@ const metric: Record<LengthMetricUnits, Unit> = {
     },
     to_anchor: 1e-2,
   },
+  dm: {
+    name: {
+      singular: 'Decimeter',
+      plural: 'Decimeters',
+    },
+    to_anchor: 1e-1,
+  },
   m: {
     name: {
       singular: 'Meter',
@@ -58,6 +66,13 @@ const metric: Record<LengthMetricUnits, Unit> = {
 };
 
 const imperial: Record<LengthImperialUnits, Unit> = {
+  mil: {
+    name: {
+      singular: 'Mil',
+      plural: 'Mils',
+    },
+    to_anchor: 1 / 12000,
+  },
   in: {
     name: {
       singular: 'Inch',
